@@ -2,6 +2,7 @@
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Unity;
+
 using PluralsightPrismDemo.Infrastructure;
 
 namespace PluralsightPrismDemo.People
@@ -15,7 +16,7 @@ namespace PluralsightPrismDemo.People
         {
             this._container = container;
             this._regionManager = regionManager;
-        }
+        }       
 
         public void Initialize()
         {

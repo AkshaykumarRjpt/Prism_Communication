@@ -2,11 +2,15 @@ using System;
 using PluralsightPrismDemo.Infrastructure;
 using PluralsightPrismDemo.Business;
 using Microsoft.Practices.Prism.Commands;
+using PluralsightPrismDemo.Infrastructure.Commands;
+using Microsoft.Practices.Prism.Events;
+using PluralsightPrismDemo.Infrastructure.Events;
 
 namespace PluralsightPrismDemo.People
 {
     public class PersonViewModel : ViewModelBase, IPersonViewModel
     {
+        IEventAggregator _eventaggregator;
         public string ViewName
         {
             get
@@ -17,15 +21,18 @@ namespace PluralsightPrismDemo.People
 
         public DelegateCommand SaveCommand { get; set; }
 
-        public PersonViewModel(IPersonView view)
+        public PersonViewModel(IPersonView view, IEventAggregator eventaggregator)
             : base(view)
         {
+            _eventaggregator = eventaggregator;
             SaveCommand = new DelegateCommand(Save, CanSave);
+            GlobalCommands.SaveAllCommand.RegisterCommand(SaveCommand);
         }
 
         private void Save()
         {
             Person.LastUpdated = DateTime.Now;
+            _eventaggregator.GetEvent<PersonUpdatedEvent>().Publish(string.Format("{0}{1}", Person.FirstName, Person.LastName));
         }
         private bool CanSave()
         {
